@@ -4,11 +4,11 @@ from matplotlib import pyplot as plt
 
 
 def init_parameter():
-    W1 = np.random.rand(10, 784) - 0.5
-    W2 = np.random.rand(10, 10) - 0.5
-    W3 = np.random.rand(10, 10) - 0.5
-    b1 = np.random.rand(10, 1) - 0.5
-    b2 = np.random.rand(10, 1) - 0.5
+    W1 = np.random.rand(100, 784) - 0.5
+    W2 = np.random.rand(50, 100) - 0.5
+    W3 = np.random.rand(10, 50) - 0.5
+    b1 = np.random.rand(100, 1) - 0.5
+    b2 = np.random.rand(50, 1) - 0.5
     b3 = np.random.rand(10, 1) - 0.5
     return W1, b1, W2, b2, W3, b3
 
@@ -51,8 +51,8 @@ def backward_prop(Z1, A1, Z2, A2, Z3, A3, W1, W2, W3, X, Y):
     dZ2 = W3.T.dot(dZ3) * ReLU_deriv(Z2)
     dW2 = 1 / m * dZ2.dot(A1.T)
     db2 = 1 / m * np.sum(dZ2)
-    dZ1 = W2.T.dot(dZ3) * ReLU_deriv(Z1)
-    dW1 = 1 / m * dZ2.dot(X.T)
+    dZ1 = W2.T.dot(dZ2) * ReLU_deriv(Z1)
+    dW1 = 1 / m * dZ1.dot(X.T)
     db1 = 1 / m * np.sum(dZ1)
     return dW1, db1, dW2, db2, dW3, db3
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     # get test data set
     X_test = df_test.values.T
     X_test = X_test / 255
-    y_test = y_df["Label"].values.T
+    y_test = y_df["Label"].values
     # get training set
     data = np.array(df_train)
     m, n = data.shape
@@ -131,7 +131,7 @@ if __name__ == "__main__":
     X_train = X_train / 255
     y_train = data_train[:, 0].T
 
-    W1, b1, W2, b2, W3, b3 = gradient_descent(X_train, y_train, 0.05, 1000)
+    W1, b1, W2, b2, W3, b3 = gradient_descent(X_train, y_train, 0.1, 200)
 
     test_prediction(0, W1, b1, W2, b2, W3, b3)
     test_prediction(10, W1, b1, W2, b2, W3, b3)
